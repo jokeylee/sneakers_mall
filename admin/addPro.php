@@ -6,12 +6,10 @@
 }
 
     mysqli_query($conn,"set names utf8");
-    $result=mysqli_query($conn,"select * from category");
-
-    $rows = [];
-
-    while($row = mysqli_fetch_assoc($result)){
-    $rows[] = $row;
+    $result=mysqli_query($conn,"select * from class_list");
+    $class_rows = [];
+    while($class_row = mysqli_fetch_assoc($result)){
+    $class_rows[] = $class_row;
 }
     
 ?>
@@ -33,19 +31,27 @@
 		<td align="right" width="15%"><span class="td-txt">商品名称</span></td>
 		<td ><input width="100px" type="text" name="pName"  placeholder="请输入商品名称"/></td>
 	</tr>
+    <?php foreach($class_rows as $class_key=>$class_row):
+    $result=mysqli_query($conn,"select * from category where class_name = '".$class_row['class_name']."'");
+
+    $rows = [];
+    while($row = mysqli_fetch_assoc($result)){
+    $rows[] = $row;
+}?>
 	<tr>
-		<td align="right"><span class="td-txt">商品分类</span></td>
+		<td align="right"><span class="td-txt"><?php echo $class_row['class_name']?>类目</span></td>
 		<td>
-		<select id="cate" name="pCateId" class="">
+		<select name=<?php echo $class_row['id']?> class="cate">
             <option value="?" selected='selected'>?</option>
 			<?php foreach($rows as $key=>$row):?>
-                <option value="<?=$row['name']?>">
+                <option value="<?=$row['id']?>">
                     <?php echo $row['name'];?>
                 </option>
             <?php endforeach;?>
 		</select>
 		</td>
-	</tr>  
+	</tr>
+    <?php endforeach;?> 
 	<tr>
 		<td align="right"><span class="td-txt">商品价格</span></td>
 		<td><input class="" type="text" name="priceB"  placeholder="单位（元）"/></td>

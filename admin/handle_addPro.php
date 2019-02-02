@@ -6,6 +6,12 @@
     }
     mysqli_query($conn,"set names utf8");
 
+    $result=mysqli_query($conn,"select * from class_list");
+    $class_rows = [];
+    while($class_row = mysqli_fetch_assoc($result)){
+    $class_rows[] = $class_row;
+}
+
     $file = $_FILES['myFile'];
     $pro_image =  '../upload/pro_image/'.$file['name'];
 
@@ -26,11 +32,26 @@
         $image = imagecopyresized($dstimage, $srcimage, 0, 0, 0, 0, $newwidth, $newheight,  $srcwdith, $srcheight);
     
         imagejpeg($dstimage, $avatar_thumb);*/
-        $sql="INSERT INTO product(id,name,price,description,icon,category_name) values(null,'".$_POST['pName']."','".$_POST['priceB']."','".$_POST['pdescrib']."','".$pro_image."','".$_POST['pCateId']."')";
+        $arr_dict = array();
+        foreach($class_rows as $key=>$class_row){
+            $arr_dict[$class_row['id']] = $_POST[$class_row['id']];
+        $sql="INSERT INTO product(id,name,price,description,icon,category_id,class_id) values(null,'".$_POST['pName']."','".$_POST['priceB']."','".$_POST['pdescrib']."','".$pro_image."','".$_POST[$class_row['id']]."','".$class_row['id']."')";
         mysqli_query($conn,$sql);
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
+            break;
+        }
+
         }
         echo '发布商品成功！';
+        //     echo $class_row;
+        // $jsons = json_encode($arr_dict);
+        // echo $jsons;
+        // $sql="INSERT INTO product(id,name,price,description,icon,category_name) values(null,'".$_POST['pName']."','".$_POST['priceB']."','".$_POST['pdescrib']."','".$pro_image."','".$_POST['pCateId']."')";
+        // mysqli_query($conn,$sql);
+        // if(mysqli_errno($conn)!==0){
+        //     die(mysqli_error($conn));
+        // }
+        // echo '发布商品成功！';
     }
 ?>

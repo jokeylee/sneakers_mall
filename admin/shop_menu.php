@@ -18,7 +18,7 @@
     }
     mysqli_query($conn,"set names utf8");
 
-    $sql="select * from category order by weight desc";
+    $sql="select * from class_list order by class_weight desc";
     $result=mysqli_query($conn,$sql);
     $rows=[];
     while ($row=mysqli_fetch_assoc($result)) {
@@ -32,10 +32,10 @@
         $searches[]=$search;
     }
     
-    $list1="select name from category order by weight desc limit 1";
+    $list1="select id from class_list order by class_weight desc limit 1";
     $show1=mysqli_query($conn,$list1);
     $result1=mysqli_fetch_assoc($show1);
-    $list2="select * from product where category_name='".$result1['name']."'";
+    $list2="select * from product where class_id='".$result1['id']."'";
     $result2=mysqli_query($conn,$list2);
     $showes=[];
     while ($show=mysqli_fetch_assoc($result2)) {
@@ -110,16 +110,27 @@
     </div>
 
             <?php  foreach($rows as $key=>$row):?>
-            <div style="border-bottom: 1px solid" data-toggle="collapse" data-target="#demo<?php echo $key;?>">
+            <div style="border-bottom: 1.5px solid #F63440" data-toggle="collapse" data-target="#demo<?php echo $key;?>">
             <button class="content_button">
                 <span class="glyphicon glyphicon-th-list"></span>
-                <?php echo $row['name']?>
+                <?php echo $row['class_name']?>
             </button>
             </div>
 
-            <div id="demo<?php echo $key;?>" class="content_list collapse" style="background-color:rgb(212, 198, 199)">
-                <span class="category_index" style="display: none;"><?php echo $row['id']?></span>
-                <span class="list_name" ><?php echo $row['name']?></span>
+            <div id="demo<?php echo $key;?>" class="content_list collapse">
+                <?php  
+                $query="select * from category where class_name='".$row['class_name']."'";
+                $arry=mysqli_query($conn,$query);
+                $cates=[];
+                while ($search=mysqli_fetch_assoc($arry)) {
+                    $cates[]=$search;
+                }
+            foreach($cates as $key=>$r):?>
+                <div class="list_entry" style="background-color:#F7F7F7; border-bottom: 0.1px solid #F63440" class_id=<?php echo $row['id']?>>
+                <span class="category_index" style="display: none;"><?php echo $r['id']?></span>
+                <span class="list_name" ><?php echo $r['name']?></span>
+                </div>
+            <?php endforeach;?>
             </div>
             <?php endforeach;?>
         </div>
@@ -213,13 +224,20 @@ window.onload=function(){
     var shopcar_empty=document.getElementsByClassName("shopcar_empty")[0];
     var shopcar_notempty=document.getElementsByClassName("shopcar_notempty")[0];
 
-    var content_list=document.getElementsByClassName("content_list");
+    var content_list=document.getElementsByClassName("list_entry");
     for(var i=0;i<content_list.length;i++){
         content_list[0].style.backgroundColor="#F63440";
         content_list[0].style.color="white";
+        content_list[i].onmouseover=function(){
+            for(var j=0;j<content_list.length;j++){
+                content_list[j].style.backgroundColor="#F7F7F7";
+                content_list[j].style.color="black";
+            }
+            this.style.backgroundColor = "#F63440";
+        }
         content_list[i].onclick=function(){
             for(var j=0;j<content_list.length;j++){
-                content_list[j].style.backgroundColor="rgb(212, 198, 199)";
+                content_list[j].style.backgroundColor="#F7F7F7";
                 content_list[j].style.color="black";
             }
             this.style.backgroundColor="#F63440";
@@ -228,10 +246,13 @@ window.onload=function(){
     }
 
 
-    $(".content_list").click(function(){
+    $(".list_entry").click(function(){
         $(".first_view").remove();
-        var thisID=$(this).children(".category_index").html();
-        data={id:thisID};
+        var class_id = $(this).attr("class_id")
+        // alert(class_id)
+        var cate_id=$(this).children(".category_index").html();
+        // alert(cate_id)
+        data={"class_id":class_id, "cate_id":cate_id};
         post_ajax("../handle_menu.php", data, sucess_function);                   
         
     });
