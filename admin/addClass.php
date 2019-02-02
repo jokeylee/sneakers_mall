@@ -6,13 +6,6 @@
     }
 
     mysqli_query($conn,"set names utf8");
-    $result=mysqli_query($conn,"select * from class_list");
-
-    $rows = [];
-
-    while($row = mysqli_fetch_assoc($result)){
-    $rows[] = $row;
-}
     
 ?>
 <!doctype html>
@@ -24,34 +17,22 @@
 <link rel=stylesheet href="style/product.css"> 
 </head>
 <body>
-<span class="main-title">添加标签</span>
+<span class="main-title">添加类目</span>
 <span id="main-tip">用户名为空</span>
 <div class="form-add">
-<form action="handle_addCate.php" id="add_product" method="post" enctype="multipart/form-data">
+<form action="handle_addClass.php" id="add_product" method="post" enctype="multipart/form-data">
 <table class="table  table-bordered table-hover">
     <tr>
         <td align="right" width="20%"><span class="td-txt">类目名称</span></td>
-        <td>
-        <select  name="class_name" class="">
-            <option value="?" selected='selected'>?</option>
-            <?php foreach($rows as $key=>$row):?>
-                <option value="<?=$row['class_name']?>">
-                    <?php echo $row['class_name'];?>
-                </option>
-            <?php endforeach;?>
-        </select>
-        </td></tr>
-    <tr>
-        <td align="right" width="20%"><span class="td-txt">标签名称</span></td>
-        <td><input type="text" width="100%" id="cname" name="cname" placeholder="请输入标签名称"/></td>
+        <td><input type="text" width="100%"  name="class_name" placeholder="请输入类目名称"/></td>
     </tr>
     <tr>
-        <td align="right"><span class="td-txt">标签权重</span></td>
+        <td align="right"><span class="td-txt">权重</span></td>
         <td><input type="text" name="weight" placeholder="权重数字，越大越靠前"/></td>
     </tr> 
 
 </table>
-<input class="btn btn-primary"  type="submit"  value="添加标签"/>
+<input class="btn btn-primary"  type="submit"  value="添加类目"/>
 </form>
 </div>
 

@@ -7,7 +7,7 @@
     mysqli_query($conn,"set names utf8");
     $id=$_GET['id'];
 
-    $result=mysqli_query($conn,"select weight from category");
+    $result=mysqli_query($conn,"select class_weight from class_list");
     $rows = [];
     while($row = mysqli_fetch_assoc($result)){
         $rows[] = $row;
@@ -17,13 +17,13 @@
             echo "该权值已经存在，不能更改，请重新编辑！";
             ?>
             <script type="text/javascript">
-            window.location="editCate.php?id="+$id;
+            window.location="editClass.php?id="+$id;
             </script>
 <?php
         }
     }
 
-    $sql="UPDATE category set name='".$_POST['name']."',class_name='".$_POST['class_name']."',weight='".$_POST['weight']."' where id='".$id."'";
+    $sql="UPDATE class_list set class_name='".$_POST['name']."',class_weight='".$_POST['weight']."' where id='".$id."'";
     mysqli_query($conn,$sql);
     if(mysqli_errno($conn)!==0){
         die(mysqli_error($conn));

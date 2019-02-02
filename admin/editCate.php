@@ -7,8 +7,14 @@
     mysqli_query($conn,"set names utf8");
     $id=$_GET['id'];
 
-    $result=mysqli_query($conn,"select * from category weight where id='".$id."'");
+    $result=mysqli_query($conn,"select * from category where id='".$id."'");
     $row = mysqli_fetch_assoc($result);
+    
+    $result2=mysqli_query($conn,"select * from class_list where class_name !='".$row['class_name']."'");
+    $class_rows = [];
+    while($class_row = mysqli_fetch_assoc($result2)){
+    $class_rows[] = $class_row;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,9 +31,21 @@
 <form action="handle_editCate.php?id=<?=$id?>" method="post">
 <table class="table  table-bordered table-hover">
 	<tr>
-		<td align="right"><span class="td-txt">类目名称</span></td>
-		<td><input type="text" name="name" value="<?php echo $row['name'];?>"/></td>
-	</tr>
+        <td align="right"><span class="td-txt">标签名称</span></td>
+        <td><input type="text" name="name" value="<?php echo $row['name'];?>"/></td>
+    </tr>
+    <tr>
+        <td align="right"><span class="td-txt">类目名称</span></td>
+        <td>
+        <select  name="class_name" class="">
+            <option value="<?=$row['class_name']?>" selected='selected'> <?php echo $row['class_name'];?></option>
+            <?php foreach($class_rows as $key=>$r):?>
+                <option value="<?=$r['class_name']?>">
+                    <?php echo $r['class_name'];?>
+                </option>
+            <?php endforeach;?>
+        </select>
+        </td></tr>
     <tr>
         <td align="right"><span class="td-txt">类目权重</span></td>
         <td><input type="text" name="weight" maxlength="4" value="<?php echo $row['weight'];?>"/></td>

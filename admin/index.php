@@ -49,8 +49,10 @@ if (!empty($_SESSION['user'])) {
                     <span class="menu-item-name">分类管理</span>
                 </div>
                 <dl id="menu2" style="display:none;">
-                    <dd><a href="addCate.php" target="mainFrame">添加分类</a></dd>
-                    <dd><a href="listCate.php" target="mainFrame">分类列表</a></dd>
+                    <dd><a href="addClass.php" target="mainFrame">添加类别</a></dd>
+                    <dd><a href="addCate.php" target="mainFrame">添加标签</a></dd>
+                    <dd><a href="listClass.php" target="mainFrame">分类列表</a></dd>
+                    <dd><a href="listCate.php" target="mainFrame">标签列表</a></dd>
                 </dl>
             </li>
             <li>

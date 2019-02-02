@@ -48,14 +48,49 @@
 <head lang="en">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../style/shop.css">
+    <link href="../style/bootstrap.min.css" rel="stylesheet">
+    <link href="../style/fonts/glyphicons-halflings-regular.woff" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
     <script src="../js/jquery-3.0.0.js"></script>
     <script src="../js/jquery.fly.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <script src="../ajax/Ajax.js"></script>
     <script src="../ajax/Json.js"></script>
     <script src="../js/json2.js"></script>
     <script src="../js/cookie.js"></script>
     <title>运动球鞋零售商城</title>
+    <style type="text/css">
+            .search {
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+        margin: 30px 0px 20px 5px;
+    }
+    .sinput {
+        display: inline-block;
+        height: 35px;
+        width: 80%;
+        font-size: 18px;
+        outline: none;
+    }
+    .sbt {
+        display: inline-block;
+        outline: none;
+        width: 60px;
+        height: 35px;
+        background: #F63440;
+        border: none;
+        border-bottom-right-radius: 6%;
+        border-top-right-radius: 6%;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    .sinput:focus {
+        border: 1px #109def solid; 
+    }
+
+    </style>
 </head>
 <body>
 
@@ -66,14 +101,25 @@
             <span class="content_title">运动球鞋零售商城</span>
         </div>
         <div class="content_leftCon">
-            <div class="left_icon" style="margin-bottom: 3rem;"></div>
+<!--             <div class="left_icon" style="margin-bottom: 3rem;">
+                <input type="search" name="搜索商品" value="" placeholder="">
+            </div> -->
+                <div class="search">
+    <input type="text" onfocus="enterSearch()" placeholder="搜索商品..." name="sinput" class="sinput">
+    <input type="button" onclick="filterSongs()" class="sbt" name="search" value="搜索">
+    </div>
+
             <?php  foreach($rows as $key=>$row):?>
-            <button class="content_button" data-toggle="collapse" data-target="#demo">
-            种类
+            <div style="border-bottom: 1px solid" data-toggle="collapse" data-target="#demo<?php echo $key;?>">
+            <button class="content_button">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?php echo $row['name']?>
             </button>
-            <div class="content_list" id="demo" class="collapse in">
+            </div>
+
+            <div id="demo<?php echo $key;?>" class="content_list collapse" style="background-color:rgb(212, 198, 199)">
                 <span class="category_index" style="display: none;"><?php echo $row['id']?></span>
-                <span class="list_name"><?php echo $row['name']?></span>
+                <span class="list_name" ><?php echo $row['name']?></span>
             </div>
             <?php endforeach;?>
         </div>
@@ -83,7 +129,7 @@
         </div>
         <div class="content_center_content">
             <div class="center_notice">
-                <span class="notice_content">公告：每天15:00之前下单次日可送达哦~ 催单电话：13991999199</span>
+                <span class="notice_content">公告：催单电话：13991999199,每天15:00之前下单次日即可送达哦~ </span>
             </div>
             <div class="menu_list1">
                 <?php foreach($showes as $key=>$show):?>
@@ -173,7 +219,7 @@ window.onload=function(){
         content_list[0].style.color="white";
         content_list[i].onclick=function(){
             for(var j=0;j<content_list.length;j++){
-                content_list[j].style.backgroundColor="#FAFAFA";
+                content_list[j].style.backgroundColor="rgb(212, 198, 199)";
                 content_list[j].style.color="black";
             }
             this.style.backgroundColor="#F63440";

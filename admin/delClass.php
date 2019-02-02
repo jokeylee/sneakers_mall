@@ -5,10 +5,12 @@
         die(mysqli_connect_error());
     }
     mysqli_query($conn,"set names utf8");
-    $sql="INSERT INTO category(class_name,name,weight) values('".$_POST['class_name']."','".$_POST['cname']."','".$_POST['weight']."')";
+    $id=$_GET['id'];
+
+    $sql="DELETE FROM class_list WHERE id='".$id."'";
     mysqli_query($conn,$sql);
     if(mysqli_errno($conn)!==0){
         die(mysqli_error($conn));
     }
-    echo '添加类目成功！';
+    echo '删除该类目成功！';
 ?>
