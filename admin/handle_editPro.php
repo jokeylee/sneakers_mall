@@ -27,7 +27,7 @@
         $image = imagecopyresized($dstimage, $srcimage, 0, 0, 0, 0, $newwidth, $newheight,  $srcwdith, $srcheight);
     
         imagejpeg($dstimage, $avatar_thumb);*/
-        $sql="UPDATE product set name='".$_POST['name']."',price='".$_POST['price']."',description='".$_POST['description']."',icon='".$pro_image."',category_name='".$_POST['category_name']."' where id='".$id."'";
+        $sql="UPDATE product set name='".$_POST['name']."',price='".$_POST['price']."',description='".$_POST['description']."',icon='".$pro_image."',class_id='".$_POST['class_id']."' where id='".$id."'";
         mysqli_query($conn,$sql);
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));

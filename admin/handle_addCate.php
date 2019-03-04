@@ -5,7 +5,7 @@
         die(mysqli_connect_error());
     }
     mysqli_query($conn,"set names utf8");
-    $sql="INSERT INTO category(class_name,name,weight) values('".$_POST['class_name']."','".$_POST['cname']."','".$_POST['weight']."')";
+    $sql="INSERT INTO category(class_name,tag_name,tag_weight) values('".$_POST['class_name']."','".$_POST['cname']."','".$_POST['weight']."')";
     mysqli_query($conn,$sql);
     if(mysqli_errno($conn)!==0){
         die(mysqli_error($conn));

@@ -6,7 +6,7 @@
     }
     mysqli_query($conn,"set names utf8");
 
-    $result=mysqli_query($conn,"select * from class_list");
+    $result=mysqli_query($conn,"select * from class_list order by class_weight desc");
     $class_rows = [];
     while($class_row = mysqli_fetch_assoc($result)){
     $class_rows[] = $class_row;
@@ -14,7 +14,7 @@
 
     $file = $_FILES['myFile'];
     $pro_image =  '../upload/pro_image/'.$file['name'];
-
+    print_r($_POST);
     if (move_uploaded_file($file['tmp_name'], $pro_image)) {
     
         /*$imagesize = getimagesize($pro_image);
@@ -33,10 +33,15 @@
     
         imagejpeg($dstimage, $avatar_thumb);*/
         $arr_dict = array();
-        foreach($class_rows as $key=>$class_row){
-            $arr_dict[$class_row['id']] = $_POST[$class_row['id']];
-        $sql="INSERT INTO product(id,name,price,description,icon,category_id,class_id) values(null,'".$_POST['pName']."','".$_POST['priceB']."','".$_POST['pdescrib']."','".$pro_image."','".$_POST[$class_row['id']]."','".$class_row['id']."')";
-        mysqli_query($conn,$sql);
+        $sql="INSERT INTO product(name,price,description,icon) values('".$_POST['pName']."','".$_POST['priceB']."','".$_POST['pdescrib']."','".$pro_image."');";
+        if (mysqli_query($conn, $sql)) {
+          $last_id = mysqli_insert_id($conn);
+        } else {
+           die(mysqli_error($conn));
+       }
+       foreach($class_rows as $key=>$class_row){
+        $sql2 = "INSERT INTO product_tag(product_id, class_name, tag_name) values('".$last_id."','".$class_row['class_name']."','".$_POST[$class_row['class_name']]."')";
+        mysqli_query($conn,$sql2);
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
             break;

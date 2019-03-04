@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if (empty($_SESSION['user'])){
+        $user = false;
+    }
     $user=$_SESSION['user'];
     header('Content-Type:text/html; charset=UTF-8');
     $conn = mysqli_connect('localhost', 'root' ,'' , 'makeorder');
@@ -27,11 +30,15 @@
 <body>
     <div class="header">
         <div class="left_header">
-            <i class="fa fa-cutlery" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
-            <span class="content_title">某某餐饮有限公司</span>
+            <i class="" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
+            <span class="content_title">某某运动球鞋零售商城</span>
         </div>
         <div class="right_menu">
+            <?php if $user?>
             <span class="user">欢迎您，<?=$user['name']?></span>
+            <?php else ?>
+            <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
+            <?php endif?>
             <a class="details" href="">我的资料</a>
             <a class="logout" href="logout.php">退出登录</a>
         </div>

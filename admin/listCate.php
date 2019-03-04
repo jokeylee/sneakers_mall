@@ -6,7 +6,7 @@
     }
     mysqli_query($conn,"set names utf8");
 
-    $sql="select * from category order by weight desc";
+    $sql="select * from category order by tag_weight desc";
     $result=mysqli_query($conn,$sql);
     $rows=[];
     while ($row=mysqli_fetch_assoc($result)) {
@@ -43,9 +43,9 @@
         <?php  foreach($rows as $key=>$row):?>
             <tr>
             <!--这里的id和for里面的c1 需要循环出来-->
-                <td align="center"><?php echo $row['name'];?></td>
+                <td align="center"><?php echo $row['tag_name'];?></td>
                 <td align="center"><?php echo $row['class_name'];?></td>
-                <td align="center"><?php echo $row['weight'];?></td>
+                <td align="center"><?php echo $row['tag_weight'];?></td>
                 <td align="center"><a class="btn btn-link" onclick="editCate(<?php echo $row['id'];?>)">修改</a><a class="btn btn-link"  onclick="delCate(<?php echo $row['id'];?>)">删除</a></td>
             </tr>
         <?php endforeach;?>

@@ -2,14 +2,13 @@
     session_start();
     if (!empty($_SESSION['user'])) {
         $is_login = 1;
+        if ($_SESSION['user']['user_grant']=="用户") {
+        $is_user = 1;
+        } else {
+            $is_user = 0;
+        }
     } else {
         $is_login = 0;
-        die("请先登录！");
-    }
-    if ($_SESSION['user']['user_grant']=="用户") {
-        $is_user = 1;
-    } else {
-        $is_user = 0;
     }
     header('Content-Type:text/html; charset=UTF-8');
     $conn = mysqli_connect('localhost', 'root' ,'' , 'makeorder');
@@ -32,10 +31,7 @@
         $searches[]=$search;
     }
     
-    $list1="select id from class_list order by class_weight desc limit 1";
-    $show1=mysqli_query($conn,$list1);
-    $result1=mysqli_fetch_assoc($show1);
-    $list2="select * from product where class_id='".$result1['id']."'";
+    $list2="select * from product where class_id in (select id from class_list order by class_weight desc)";
     $result2=mysqli_query($conn,$list2);
     $showes=[];
     while ($show=mysqli_fetch_assoc($result2)) {
@@ -97,16 +93,13 @@
 <div class="content">
     <div class="content_left">
         <div class="content_left_header">
-            <i class="fa fa-cutlery" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
-            <span class="content_title">运动球鞋零售商城</span>
+            <i class="" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
+            <span class="content_title">某某运动球鞋零售商城</span>
         </div>
         <div class="content_leftCon">
-<!--             <div class="left_icon" style="margin-bottom: 3rem;">
-                <input type="search" name="搜索商品" value="" placeholder="">
-            </div> -->
-                <div class="search">
-    <input type="text" onfocus="enterSearch()" placeholder="搜索商品..." name="sinput" class="sinput">
-    <input type="button" onclick="filterSongs()" class="sbt" name="search" value="搜索">
+    <div class="search">
+    <input type="text" placeholder="搜索商品..." name="sinput" class="sinput">
+    <input type="button" onclick="search_product(this)" class="sbt" name="search" value="搜索">
     </div>
 
             <?php  foreach($rows as $key=>$row):?>
@@ -145,19 +138,19 @@
             <div class="menu_list1">
                 <?php foreach($showes as $key=>$show):?>
                 <div class="menu_list1_content each-<?=$show['id']?> first_view" id="<?php echo $show['id'];?>">
-                    <div class="menu_list1_content_img"><img src="<?=$show['icon']?>"/></div>
+                    <div class="menu_list1_content_img" onclick="show_product_details(this)"><img src="<?=$show['icon']?>"/></div>
                     <p class="menu_list1_name"><?php echo $show['name'];?></p>
                     <p class="menu_list1_description"><?php echo $show['description'];?></p>
-                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 4.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $show['price'];?></span>
+                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $show['price'];?></span>
                     <div class="menu_list1_addshopcar"></div>
                 </div>
                 <?php  endforeach;?>
                 <?php foreach($searches as $key=>$search):?>
                 <div class="menu_list1_content each-<?=$search['id']?>" id="<?php echo $search['id'];?>" style="display: none;">
-                    <div class="menu_list1_content_img"><img src="<?=$search['icon']?>"/></div>
+                    <div class="menu_list1_content_img" onclick="show_product_details(this)"><img src="<?=$search['icon']?>"/></div>
                     <p class="menu_list1_name"><?php echo $search['name'];?></p>
                     <p class="menu_list1_description"><?php echo $search['description'];?></p>
-                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 4.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $search['price'];?></span>
+                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $search['price'];?></span>
                     <div class="menu_list1_addshopcar"></div>
                 </div>
                 <?php  endforeach;?>
@@ -167,6 +160,7 @@
     </div>
     <div class="content_right">
         <div class="content_right_header">
+        <?php if ($is_login):?>
         <?php if($is_user):?>
             <span class="right_about">欢迎您,<?=$_SESSION['user']['name']?></span>
             <a class="right_details" href="../user.php">我的资料</a>
@@ -175,6 +169,9 @@
         <?php if(!$is_user):?>
             <span class="right_about">欢迎您,<?=$_SESSION['user']['name']?></span>
             <a class="right_details" href="index.php">返回后台</a>
+        <?php endif?>
+        <?php else: ?>
+            <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
         <?php endif?>
         </div>
         <div class="content_right_content">
@@ -434,6 +431,19 @@ window.onload=function(){
         var length=shopcar_onelist.length;
         list={len:length};
         post_ajax("order.php",list,false);*/
+    }
+
+    function search_product(elem){
+        search_word = $(elem).parent().find(".sinput").val()
+        data={"search_word":search_word};
+        post_ajax("../search_products.php", data, sucess_function);
+    }
+
+    function show_product_details(elem){
+        pro_id=$(elem).parent().attr("id")
+        alert(pro_id)
+        data={"pro_id":pro_id};
+        post_ajax("../show_product_details.php", data, sucess_function);
     }
 </script>
 </body>

@@ -6,7 +6,7 @@
 }
 
     mysqli_query($conn,"set names utf8");
-    $result=mysqli_query($conn,"select * from class_list");
+    $result=mysqli_query($conn,"select * from class_list order by class_weight desc");
     $class_rows = [];
     while($class_row = mysqli_fetch_assoc($result)){
     $class_rows[] = $class_row;
@@ -31,7 +31,7 @@
 		<td align="right" width="15%"><span class="td-txt">商品名称</span></td>
 		<td ><input width="100px" type="text" name="pName"  placeholder="请输入商品名称"/></td>
 	</tr>
-    <?php foreach($class_rows as $class_key=>$class_row):
+<?php foreach($class_rows as $class_key=>$class_row):
     $result=mysqli_query($conn,"select * from category where class_name = '".$class_row['class_name']."'");
 
     $rows = [];
@@ -41,11 +41,11 @@
 	<tr>
 		<td align="right"><span class="td-txt"><?php echo $class_row['class_name']?>类目</span></td>
 		<td>
-		<select name=<?php echo $class_row['id']?> class="cate">
+		<select name=<?php echo $class_row['class_name']?> class="cate">
             <option value="?" selected='selected'>?</option>
 			<?php foreach($rows as $key=>$row):?>
-                <option value="<?=$row['id']?>">
-                    <?php echo $row['name'];?>
+                <option value="<?=$row['tag_name']?>">
+                    <?php echo $row['tag_name'];?>
                 </option>
             <?php endforeach;?>
 		</select>

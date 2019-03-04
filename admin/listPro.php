@@ -6,7 +6,7 @@
     }
     mysqli_query($conn,"set names utf8");
 
-    $result=mysqli_query($conn,"select * from category");
+    $result=mysqli_query($conn,"select * from class_list");
     $rows = [];
     while($row = mysqli_fetch_assoc($result)){
         $rows[] = $row;
@@ -46,8 +46,8 @@
                     <select id="" class="select form-control search_select" onchange="change(this.value)">
                         <option value="" selected='selected'>全部</option>
                         <?php foreach($rows as $key=>$row):?>
-                        <option value="<?=$row['name']?>" >
-                            <?php echo $row['name'];?>
+                        <option value="<?=$row['class_name']?>" >
+                            <?php echo $row['class_name'];?>
                         </option>
                         <?php endforeach;?>
                     </select>
@@ -69,7 +69,10 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach($searches as $key=>$search):?>
+            <?php foreach($searches as $key=>$search):
+            $class_name=mysqli_query($conn,"select class_name from product_tag where product_id='".$search['id']."'");
+            $class_obj=mysqli_fetch_assoc($class_name);
+            ?>
             <tr align="center">
                 <!-- 这里的id和for里面的c1 需要循环出来 -->
                 <td><?php echo $search['id'];?></td>
@@ -77,7 +80,7 @@
                 <td><?php echo $search['price'];?></td>
                 <td style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"><?php echo $search['description'];?></td>
                 <td><img style="width: 4rem;height:4rem;" src="<?=$search['icon'];?>"/></td>
-                <td><?php echo $search['category_name'];?></td>
+                <td><?php echo $class_obj['class_name'];?></td>
                 <td>
                     <a class="btn btn-link" onclick="editPro(<?php echo $search['id'];?>)">修改</a>
                     <a class="btn btn-link"  onclick="delPro(<?php echo $search['id'];?>)">删除</a>

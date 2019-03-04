@@ -7,13 +7,13 @@
     mysqli_query($conn,"set names utf8");
     $id=$_GET['id'];
 
-    $result=mysqli_query($conn,"select * from category");
+    $result=mysqli_query($conn,"select * from class_list");
     $rows = [];
     while($row = mysqli_fetch_assoc($result)){
         $rows[] = $row;
     }
 
-    $lists=mysqli_query($conn,"select *from product where id='".$id."'");
+    $lists=mysqli_query($conn,"select * from product where id='".$id."'");
     $search=mysqli_fetch_assoc($lists);
 ?>
 <!doctype html>
@@ -41,9 +41,11 @@
 	<tr>
 		<td align="right"><span class="td-txt">商品分类</span></td>
 		<td>
-		<select name="category_name">
-			<?php foreach($rows as $key=>$row):?>
-            <option value="<?php echo $row['name'];?>" <?php echo $row['name']==$search['category_name']?"selected='selected'":null;?>><?php echo $search['category_name'];?></option>
+		<select name="class_id">
+			<?php foreach($rows as $key=>$row):
+            $pro_tag=mysqli_query($conn,"select * from product_tag where product_id='".$search['id']."'");
+            $obj=mysqli_fetch_assoc($pro_tag);?>
+            <option value="<?php echo $row['class_name'];?>" <?php echo $row['class_name']==$obj['class_name']?"selected='selected'":null;?>><?php echo $row['class_name'];?></option>
             <?php endforeach;?>
 		</select>
 		</td>
@@ -59,7 +61,7 @@
 	<tr>
         <td align="right"><span class="td-txt">商品图像</span></td>
         <td> 
-            <img style="margin:12px;width: 5rem;height: 5rem;" src="<?=$user['icon'];?>"/>
+            <img style="margin:12px;width: 5rem;height: 5rem;" src="<?=$search['icon'];?>"/>
             <input class="btn btn-file" type="file" name="myFile"/>
         </td>
     </tr> 

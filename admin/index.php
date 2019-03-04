@@ -23,8 +23,8 @@ if (!empty($_SESSION['user'])) {
 </script>
 <body>
 <div class="header">
-    <i class="fa fa-cutlery" style="vertical-align:middle;color:white;font-size: 1.6rem;margin-left: 1.5rem;line-height: 4rem;margin-right: 0.3rem;"></i>
-    <span class="header_title">某某餐饮有限公司</span>
+    <i class="" style="vertical-align:middle;color:white;font-size: 1.6rem;margin-left: 1.5rem;line-height: 4rem;margin-right: 0.3rem;"></i>
+    <span class="header_title">某某运动球鞋零售商城</span>
     <div class="header_a">
         <span class="welcome">欢迎您<span class="manager_name" style="margin-left: 0.5rem;"><?=$user['name']?></span></span>
         <a class="website" href="shop_menu.php">预览前台</a>

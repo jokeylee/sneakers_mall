@@ -32,7 +32,7 @@
 <table class="table  table-bordered table-hover">
 	<tr>
         <td align="right"><span class="td-txt">标签名称</span></td>
-        <td><input type="text" name="name" value="<?php echo $row['name'];?>"/></td>
+        <td><input type="text" name="name" value="<?php echo $row['tag_name'];?>"/></td>
     </tr>
     <tr>
         <td align="right"><span class="td-txt">类目名称</span></td>
@@ -48,7 +48,7 @@
         </td></tr>
     <tr>
         <td align="right"><span class="td-txt">类目权重</span></td>
-        <td><input type="text" name="weight" maxlength="4" value="<?php echo $row['weight'];?>"/></td>
+        <td><input type="text" name="weight" maxlength="4" value="<?php echo $row['tag_weight'];?>"/></td>
     </tr> 
 </table>
 <input type="submit" class="btn btn-primary" value="编辑完成"/>
