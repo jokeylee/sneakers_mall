@@ -34,13 +34,13 @@
             <span class="content_title">某某运动球鞋零售商城</span>
         </div>
         <div class="right_menu">
-            <?php if $user?>
+            <?php if($user):?>
             <span class="user">欢迎您，<?=$user['name']?></span>
-            <?php else ?>
-            <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
-            <?php endif?>
             <a class="details" href="">我的资料</a>
             <a class="logout" href="logout.php">退出登录</a>
+            <?php else: ?>
+            <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
+            <?php endif?>
         </div>
     </div>
     <div class="content">

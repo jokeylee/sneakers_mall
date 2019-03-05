@@ -59,6 +59,7 @@
             <td><?php echo $row['order_status']==1?"已接":"未接";?></td>
             <td><?php echo $row['create_time'];?></td>
             <td align="center"><a class="btn btn-link"  onclick="orderDetail(<?=$row['order_id']?>,<?=$row['order_status']?>)">查看详情</a>
+                <a class="btn btn-link" onclick="delOrder(<?=$row['order_id']?>)">删除订单</a>
             </td>
         </tr>
         <?php  endforeach;?> 
@@ -68,6 +69,9 @@
 <script type="text/javascript">
 function orderDetail(val,status){
     window.location="order_detail.php?id="+val+"&status="+status;
+}
+function delOrder(order_id){
+    window.location ="delOrder.php?id="+order_id+"";
 }
 </script>
 </body>

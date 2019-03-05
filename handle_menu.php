@@ -6,10 +6,10 @@
     }
     mysqli_query($conn,"set names utf8");   
 
-    $query2="select * from product where class_id='".$_POST["class_id"]."' and category_id='".$_POST["cate_id"]."'";
-    $arry2=mysqli_query($conn,$query2);
+    $query="select * from product where id in (select product_id from product_tag where class_name='".$_POST["class_name"]."' and tag_name='".$_POST["tag_name"]."')";
+    $arry=mysqli_query($conn,$query);
     $searches=[];
-    while ($search=mysqli_fetch_assoc($arry2)) {
+    while ($search=mysqli_fetch_assoc($arry)) {
         $searches[]=$search;
     }
 

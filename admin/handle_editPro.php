@@ -15,7 +15,7 @@
 
     $file = $_FILES['myFile'];
     $pro_image =  '../upload/pro_image/'.$file['name'];
-    print_r($_POST);
+    // print_r($_POST);
     if (move_uploaded_file($file['tmp_name'], $pro_image)) {
     
         /*$imagesize = getimagesize($pro_image);
@@ -33,27 +33,27 @@
         $image = imagecopyresized($dstimage, $srcimage, 0, 0, 0, 0, $newwidth, $newheight,  $srcwdith, $srcheight);
     
         imagejpeg($dstimage, $avatar_thumb);*/
+        
+        // print_r($_POST);
         $sql="UPDATE product set name='".$_POST['name']."',price='".$_POST['price']."',description='".$_POST['description']."',icon='".$pro_image."' where id='".$id."'";
         mysqli_query($conn,$sql);
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
         }
         foreach($class_rows as $key=>$class_row){
-        $result = mysql_query("SELECT * FROM product_tag WHERE where product_id='".$id."' and class_name='".$class_row['class_name']."'");
+        $result = mysqli_query($conn,"SELECT * FROM product_tag WHERE product_id=".$id." and class_name='".$class_row['class_name']."'");
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
         }
-        echo $result;
         if( mysqli_num_rows($result) > 0) {
-            echo "hhhh";
-            mysqli_query($conn,"update product_tag set tag_name='".$_POST[$class_row['class_name']]."' where product_id='".$id."' and class_name='".$class_row['class_name']."'");
+            $sql="UPDATE product_tag SET tag_name='".$_POST[$class_row['class_name']]."' where product_id=".$id." and class_name='".$class_row['class_name']."'";
+            mysqli_query($conn, $sql);
             if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
             }
         }
         else
         {
-            echo "hhhhhhhhjjh";
         mysqli_query($conn, "INSERT INTO product_tag(product_id, class_name, tag_name) values('".$id."','".$class_row['class_name']."','".$_POST[$class_row['class_name']]."')");
             if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));

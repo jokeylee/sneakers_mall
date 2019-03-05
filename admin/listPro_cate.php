@@ -7,13 +7,13 @@
     mysqli_query($conn,"set names utf8");
     $name=$_GET['name'];
 
-    $result=mysqli_query($conn,"select * from category");
+    $result=mysqli_query($conn,"select * from class_list");
     $rows = [];
     while($row = mysqli_fetch_assoc($result)){
         $rows[] = $row;
     }
 
-    $lists=mysqli_query($conn,"select *from product where category_name='".$name."'");
+    $lists=mysqli_query($conn,"select * from product where id in (select product_id from product_tag where  class_name='".$name."')");
     $searches=[];
     while ($search = mysqli_fetch_assoc($lists)) {
         $searches[]=$search;
@@ -46,8 +46,8 @@
                     <select id="" class="select form-control search_select" onchange="change(this.value)">
                         <option value="" selected='selected'>全部</option>
                         <?php foreach($rows as $key=>$row):?>
-                        <option value="<?=$row['name']?>" <?php echo $row['name']==$name?"selected='selected'":null;?>>
-                            <?php echo $row['name'];?>
+                        <option value="<?=$row['class_name']?>" <?php echo $row['class_name']==$name?"selected='selected'":null;?>>
+                            <?php echo $row['class_name'];?>
                         </option>
                         <?php endforeach;?>
                     </select>
@@ -77,7 +77,7 @@
                 <td><?php echo $search['price'];?></td>
                 <td style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"><?php echo $search['description'];?></td>
                 <td><img style="width: 4rem;height:4rem;" src="<?php echo $search['icon'];?>"/></td>
-                <td><?php echo $search['category_name'];?></td>
+                <td><?php echo $name;?></td>
                 <td>
                     <a class="btn btn-link" onclick="editPro(<?php echo $search['id'];?>)">修改</a>
                     <a class="btn btn-link"  onclick="delPro(<?php echo $search['id'];?>)">删除</a>

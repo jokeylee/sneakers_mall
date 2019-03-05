@@ -31,7 +31,7 @@
         $searches[]=$search;
     }
     
-    $list2="select * from product where class_id in (select id from class_list order by class_weight desc)";
+    $list2="select * from product";
     $result2=mysqli_query($conn,$list2);
     $showes=[];
     while ($show=mysqli_fetch_assoc($result2)) {
@@ -115,13 +115,13 @@
                 $query="select * from category where class_name='".$row['class_name']."'";
                 $arry=mysqli_query($conn,$query);
                 $cates=[];
-                while ($search=mysqli_fetch_assoc($arry)) {
-                    $cates[]=$search;
+                while ($cate=mysqli_fetch_assoc($arry)) {
+                    $cates[]=$cate;
                 }
             foreach($cates as $key=>$r):?>
-                <div class="list_entry" style="background-color:#F7F7F7; border-bottom: 0.1px solid #F63440" class_id=<?php echo $row['id']?>>
-                <span class="category_index" style="display: none;"><?php echo $r['id']?></span>
-                <span class="list_name" ><?php echo $r['name']?></span>
+                <div class="list_entry" style="background-color:#F7F7F7; border-bottom: 0.1px solid #F63440" class_name=<?php echo $row['class_name']?>>
+                <span class="category_index" style="display: none;"><?php echo $r['tag_name']?></span>
+                <span class="list_name" tag_name=<?php echo $r['tag_name']?>><?php echo $r['tag_name']?></span>
                 </div>
             <?php endforeach;?>
             </div>
@@ -171,7 +171,7 @@
             <a class="right_details" href="index.php">返回后台</a>
         <?php endif?>
         <?php else: ?>
-            <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
+            <span class="right_about">欢迎您，<a href="/login.php">请先登录！</a></span>
         <?php endif?>
         </div>
         <div class="content_right_content">
@@ -245,11 +245,9 @@ window.onload=function(){
 
     $(".list_entry").click(function(){
         $(".first_view").remove();
-        var class_id = $(this).attr("class_id")
-        // alert(class_id)
-        var cate_id=$(this).children(".category_index").html();
-        // alert(cate_id)
-        data={"class_id":class_id, "cate_id":cate_id};
+        var class_name = $(this).attr("class_name")
+        var tag_name=$(this).find(".list_name").attr("tag_name")
+        data={"class_name":class_name, "tag_name":tag_name};
         post_ajax("../handle_menu.php", data, sucess_function);                   
         
     });

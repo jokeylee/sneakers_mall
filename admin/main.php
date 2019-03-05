@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>某某运动球鞋零售商城</title>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 <body width="100%">
@@ -10,7 +10,7 @@
 	</h3>
 	<br>
 	<br>
-	<p style="font-size:15px;">餐饮有限公司创建于1997年，公司总部位于全国卫生城市--XXX市。（位于中国“黄金水道”——长江下游南岸江苏省境内， 处于中国沿江及沿海两大经济带的交汇处，上海、南京、苏州、无锡等大中城市环列四周，距上海98公里、苏州58公里、无锡40公里、常州70公里、南通30公里、南京200公里，距虹桥机场98公里，浦东机场150公里，南京禄口机场200公里。）我们是一家家式大众餐厅，以XXXXX系列特色菜及盱眙龙虾为主流，兼营冷菜、热菜、酒饮茶等食品，是家庭休闲，商务简餐，朋友小聚，情侣约会，生日聚会的理想处所。餐厅装饰简约时尚，苏州园林文化浓郁。</p>
+	<p style="font-size:15px;">某某运动球鞋零售商城</p>
 	<br>
 	<br>
 	<h3>系统信息</h3>

@@ -7,7 +7,7 @@
     mysqli_query($conn,"set names utf8");
 
 	$orderPhone=$_GET['orderPhone'];
-    $result=mysqli_query($conn,"select * from orderlist where user_phone='".$orderPhone."'");
+    $result=mysqli_query($conn,"select * from orderlist where user_phone like'%".$orderPhone."%'");
     $rows = []; 
     while($row = mysqli_fetch_assoc($result)){
         $rows[] = $row;

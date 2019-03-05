@@ -11,7 +11,7 @@
     $length=$_GET['length'];
     $_SESSION['length']=$length;
 
-    if (empty($_SESSION['user']['phone'])) {
+    if (empty($_SESSION['user']['phone']) || empty($_SESSION['user']['address'])) {
         $is_complete = 0;
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,7 @@
 <div class="header" style="height: 5rem;line-height: 5rem;">
         <div class="left_header">
             <i class="fa fa-cutlery" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
-            <span class="content_title">某某餐饮有限公司</span>
+            <span class="content_title">某某运动球鞋零售商城</span>
         </div>
         <div class="right_menu">
             <span class="user">欢迎您，<?=$user['name']?></span>

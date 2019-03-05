@@ -1,8 +1,8 @@
 <?php
     session_start();
     $length=$_SESSION['length'];
-
-    $time=date("Y-m-d H:i:s");
+    error_reporting(E_ERROR | E_PARSE);
+    // $time=date("Y-m-d H:i:s");
     /*$order = json_decode($_POST['orderli'],true); */ 
     $pro_id=$_COOKIE['pro_id'];
     $pro_name=$_COOKIE['pro_name'];
@@ -47,6 +47,9 @@
     $searches = [];
     while($search = mysqli_fetch_assoc($result)){
         $searches[] = $search;
+        if(mysqli_errno($conn)!==0){
+            die(mysqli_error($conn));
+        }
     }
 ?>
 <script type="text/javascript">

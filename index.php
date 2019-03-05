@@ -1,130 +1,447 @@
-<!doctype html>
-<html lang="en">
-<head>
+<?php
+    session_start();
+    if (!empty($_SESSION['user'])) {
+        $is_login = 1;
+        if ($_SESSION['user']['user_grant']=="用户") {
+        $is_user = 1;
+        } else {
+            $is_user = 0;
+        }
+    } else {
+        $is_login = 0;
+    }
+    header('Content-Type:text/html; charset=UTF-8');
+    $conn = mysqli_connect('localhost', 'root' ,'' , 'makeorder');
+    if (mysqli_connect_errno() !== 0) {
+        die(mysqli_connect_error());
+    }
+    mysqli_query($conn,"set names utf8");
+
+    $sql="select * from class_list order by class_weight desc";
+    $result=mysqli_query($conn,$sql);
+    $rows=[];
+    while ($row=mysqli_fetch_assoc($result)) {
+        $rows[]=$row;
+    }
+
+    $query="select * from product";
+    $arry=mysqli_query($conn,$query);
+    $searches=[];
+    while ($search=mysqli_fetch_assoc($arry)) {
+        $searches[]=$search;
+    }
+    
+    $list2="select * from product";
+    $result2=mysqli_query($conn,$list2);
+    $showes=[];
+    while ($show=mysqli_fetch_assoc($result2)) {
+        $showes[]=$show;
+    }
+
+?>
+<!DOCTYPE html>
+<html>
+<head lang="en">
     <meta charset="UTF-8">
-    <title>登陆页面</title>
-    <script src="./js/jquery-3.0.0.js"></script>
+    <link rel="stylesheet" href="../style/shop.css">
+    <link href="../style/bootstrap.min.css" rel="stylesheet">
+    <link href="../style/fonts/glyphicons-halflings-regular.woff" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
-    <link rel="stylesheet" href="./style/log.css">
+    <script src="../js/jquery-3.0.0.js"></script>
+    <script src="../js/jquery.fly.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../ajax/Ajax.js"></script>
+    <script src="../ajax/Json.js"></script>
+    <script src="../js/json2.js"></script>
+    <script src="../js/cookie.js"></script>
+    <title>运动球鞋零售商城</title>
+    <style type="text/css">
+            .search {
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+        margin: 30px 0px 20px 5px;
+    }
+    .sinput {
+        display: inline-block;
+        height: 35px;
+        width: 80%;
+        font-size: 18px;
+        outline: none;
+    }
+    .sbt {
+        display: inline-block;
+        outline: none;
+        width: 60px;
+        height: 35px;
+        background: #F63440;
+        border: none;
+        border-bottom-right-radius: 6%;
+        border-top-right-radius: 6%;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    .sinput:focus {
+        border: 1px #109def solid; 
+    }
+
+    </style>
 </head>
 <body>
-<div class="back_img"></div>
-<div class="block">
-    <div class="block_top">
-        <div class="block_top_left">
-            <p class="login">快速登录</p>
+
+<div class="content">
+    <div class="content_left">
+        <div class="content_left_header">
+            <i class="" style="color:white;font-size: 1.4rem;margin-left: 1.5rem;line-height: 3.5rem;margin-right: 0.3rem;"></i>
+            <span class="content_title">某某运动球鞋零售商城</span>
         </div>
-        <div class="block_top_left">
-            <p class="register">快速注册</p>
+        <div class="content_leftCon">
+    <div class="search">
+    <input type="text" placeholder="搜索商品..." name="sinput" class="sinput">
+    <input type="button" onclick="search_product(this)" class="sbt" name="search" value="搜索">
+    </div>
+
+            <?php  foreach($rows as $key=>$row):?>
+            <div style="border-bottom: 1.5px solid #F63440" data-toggle="collapse" data-target="#demo<?php echo $key;?>">
+            <button class="content_button">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?php echo $row['class_name']?>
+            </button>
+            </div>
+
+            <div id="demo<?php echo $key;?>" class="content_list collapse">
+                <?php  
+                $query="select * from category where class_name='".$row['class_name']."'";
+                $arry=mysqli_query($conn,$query);
+                $cates=[];
+                while ($cate=mysqli_fetch_assoc($arry)) {
+                    $cates[]=$cate;
+                }
+            foreach($cates as $key=>$r):?>
+                <div class="list_entry" style="background-color:#F7F7F7; border-bottom: 0.1px solid #F63440" class_name=<?php echo $row['class_name']?>>
+                <span class="category_index" style="display: none;"><?php echo $r['tag_name']?></span>
+                <span class="list_name" tag_name=<?php echo $r['tag_name']?>><?php echo $r['tag_name']?></span>
+                </div>
+            <?php endforeach;?>
+            </div>
+            <?php endforeach;?>
         </div>
     </div>
-    <div class="underline"></div>
-    <div class="login_form">
-        <form class="login_form_content" action="login_check.php" method="post">
-            <span class="login_form_txt" style="margin-top: 10%;">用户名：</span><input class="login_form_input login_user" type="text" name="username" />
-            <span class="login_form_txt">密码：</span><input class="login_form_input login_pass" type="password" name="password"/>
-            <button class="login_form_button" style="margin-right: 5%;">快速登录</button>
-        </form>
+    <div class="content_center">
+        <div class="content_center_header">
+        </div>
+        <div class="content_center_content">
+            <div class="center_notice">
+                <span class="notice_content">公告：催单电话：13991999199,每天15:00之前下单次日即可送达哦~ </span>
+            </div>
+            <div class="menu_list1">
+                <?php foreach($showes as $key=>$show):?>
+                <div class="menu_list1_content each-<?=$show['id']?> first_view" id="<?php echo $show['id'];?>">
+                    <div class="menu_list1_content_img" onclick="show_product_details(this)"><img src="<?=$show['icon']?>"/></div>
+                    <p class="menu_list1_name"><?php echo $show['name'];?></p>
+                    <p class="menu_list1_description"><?php echo $show['description'];?></p>
+                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $show['price'];?></span>
+                    <div class="menu_list1_addshopcar"></div>
+                </div>
+                <?php  endforeach;?>
+                <?php foreach($searches as $key=>$search):?>
+                <div class="menu_list1_content each-<?=$search['id']?>" id="<?php echo $search['id'];?>" style="display: none;">
+                    <div class="menu_list1_content_img" onclick="show_product_details(this)"><img src="<?=$search['icon']?>"/></div>
+                    <p class="menu_list1_name"><?php echo $search['name'];?></p>
+                    <p class="menu_list1_description"><?php echo $search['description'];?></p>
+                    <span style="font-size: 14px;color: #F63440;line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;">￥</span><span class="menu_list1_price"><?php echo $search['price'];?></span>
+                    <div class="menu_list1_addshopcar"></div>
+                </div>
+                <?php  endforeach;?>
+                
+            </div>
+        </div>
     </div>
-    <div class="register_form">
-        <form class="register_form_content" action="handle_register.php" method="post">
-            <span class="register_form_txt" style="margin-top: 10%;">用户名：</span><input class="register_form_input username" type="text" name="name"/>
-            <span class="register_form_txt">密码：</span><input class="register_form_input password" type="password" name="password"/>
-            <div class="password_block"></div>
-            <span class="register_form_txt">验证码：</span><input class="register_form_input code" type="text" style="margin-top: 3%;" name="number"/>
-            <button class="register_form_button" style="margin-right: 5%;">同意并注册</button>
-        </form>
+    <div class="content_right">
+        <div class="content_right_header">
+        <?php if ($is_login):?>
+        <?php if($is_user):?>
+            <span class="right_about">欢迎您,<?=$_SESSION['user']['name']?></span>
+            <a class="right_details" href="../user.php">我的资料</a>
+            <a class="logout" href="../logout.php">退出登录</a>
+        <?php endif?>
+        <?php if(!$is_user):?>
+            <span class="right_about">欢迎您,<?=$_SESSION['user']['name']?></span>
+            <a class="right_details" href="index.php">返回后台</a>
+        <?php endif?>
+        <?php else: ?>
+            <span class="right_about">欢迎您，<a href="/login.php">请先登录！</a></span>
+        <?php endif?>
+        </div>
+        <div class="content_right_content">
+            <div class="right_header">
+                <span class="header_content">购物车</span>
+                <button class="header_submit"><span class="header_submit_txt">[清空]</span></button>
+            </div>
+            <div class="shopcar_list">
+                <div class="shopcar_empty">
+                    <div class="shopcar_empty_img"></div>
+                    <p class="shopcar_empty_txt">购物车空空如也</p>
+                </div>
+                <div class="shopcar_notempty" style="display: none;">
+                </div>
+            </div>
+            <div class="right_content">
+                <div class="amount">
+                    <div class="img_box"></div>
+                    <div class="empty_txt">购物车为空</div>
+                    <div class="notempty_txt" style="display: none;">
+                        <span class="total">总计： ￥</span>
+                        <span class="total_price">0</span>
+                        <button class="calculate" onclick="confirm()">结算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script>
-    window.onload=function() {
-        var password_block=document.getElementsByClassName("password_block")[0];
-        shownumber(password_block);
-        password_block.onclick=function(){
-            shownumber(password_block);
+<div class="alert">
+    <img id="close" src="../img/icon_close.png">
+    <img id="logo" src="../img/favicon.ico">
+    <p class="alert_txt">将为您生成订单···</p>
+    <button class="makeorder" onclick="makeorder()">确定</button>
+    <button class="cancel" onclick="cancel()">取消</button>
+</div>
+
+
+<script type="text/javascript">
+window.onload=function(){
+    var data,list;
+    var Arrays=new Array();
+    
+
+    var empty_txt=document.getElementsByClassName("empty_txt")[0];
+    var notempty_txt=document.getElementsByClassName("notempty_txt")[0];
+    var shopcar_empty=document.getElementsByClassName("shopcar_empty")[0];
+    var shopcar_notempty=document.getElementsByClassName("shopcar_notempty")[0];
+
+    var content_list=document.getElementsByClassName("list_entry");
+    for(var i=0;i<content_list.length;i++){
+        content_list[0].style.backgroundColor="#F63440";
+        content_list[0].style.color="white";
+        content_list[i].onmouseover=function(){
+            for(var j=0;j<content_list.length;j++){
+                content_list[j].style.backgroundColor="#F7F7F7";
+                content_list[j].style.color="black";
+            }
+            this.style.backgroundColor = "#F63440";
         }
-        var register=document.getElementsByClassName("register")[0];
-        var login=document.getElementsByClassName("login")[0];
-        register.onclick=function(){
-            var block=document.getElementsByClassName("block")[0];
-            block.style.height="25rem";
-            var register_form=document.getElementsByClassName("register_form")[0];
-            register_form.style.display="block";
-            var login_form=document.getElementsByClassName("login_form")[0];
-            login_form.style.display="none";
-            var underline=document.getElementsByClassName("underline")[0];
-            underline.style.transform="translatex(160px)";
-            login.onmouseenter=function(){
-                login.style.color="black";
+        content_list[i].onclick=function(){
+            for(var j=0;j<content_list.length;j++){
+                content_list[j].style.backgroundColor="#F7F7F7";
+                content_list[j].style.color="black";
             }
-            login.onmouseleave=function(){
-                login.style.color="grey";
-            }
-            login.style.color="grey";
-            register.style.color="black";
+            this.style.backgroundColor="#F63440";
+            this.style.color="white";
         }
-        login.onclick=function(){
-            var block=document.getElementsByClassName("block")[0];
-            block.style.height="20rem";
-            var register_form=document.getElementsByClassName("register_form")[0];
-            register_form.style.display="none";
-            var login_form=document.getElementsByClassName("login_form")[0];
-            login_form.style.display="block";
-            var underline=document.getElementsByClassName("underline")[0];
-            underline.style.transform="translatex(0px)";
-            register.style.color="grey";
-            register.onmouseenter=function(){
-                register.style.color="black";
-            }
-            register.onmouseleave=function(){
-                register.style.color="grey";
-            }
-            register.style.color="grey";
-            login.style.color="black";
-        }
-        $(".register_form_button").click(function(){
-            var code=$(".password_block").text();
-            var number=$(".code").val();
-            var username=$(".username").val();
-            var password=$(".password").val();
-            if(username=="" || password==""){
-                alert("用户名或密码不能为空！");
-                $(".register_form_content").attr("action","");
-            }
-            if(number!=code){
-                alert("验证码不正确，请重新注册！");
-                $(".register_form_content").attr("action","");
-                console.log(number);
-                console.log(code);
-            }
-            else{
-                $(".register_form_content").attr("action","handle_register.php");
-            }
-        });
-        $(".login_form_content").click(function(){
-            var username=$(".login_user").val();
-            var password=$(".login_pass").val();
-            if(username=="" || password==""){
-                $(".login_form_content").attr("action","");
-            }
-            else{
-                $(".login_form_content").attr("action","login_check.php");
-            }
-        });
+    }
+
+
+    $(".list_entry").click(function(){
+        $(".first_view").remove();
+        var class_name = $(this).attr("class_name")
+        var tag_name=$(this).find(".list_name").attr("tag_name")
+        data={"class_name":class_name, "tag_name":tag_name};
+        post_ajax("../handle_menu.php", data, sucess_function);                   
         
-}
-    function shownumber(obj)
-    {
-        obj.innerHTML="";
-        for(var i=0;i<4;i++)
+    });
+
+
+    var offset = $('.img_box').offset();  
+    $(".header_submit").click(function(){
+        Arrays=[];
+        $(".shopcar_onelist").remove();
+        $(".total_price").html("0");
+        empty_txt.style.display="block";
+        notempty_txt.style.display="none";
+        shopcar_empty.style.display="block";
+        shopcar_notempty.style.display="none";
+
+    });
+    $(document).on('click','.menu_list1_addshopcar',function(event){
+        var thisItem = $(this);  
+        var flyer = thisItem.clone();  
+        flyer.fly({  
+            start: {  
+                left: event.pageX,  
+                top: event.pageY  
+            },  
+            end: {  
+                left: offset.left + 10,  
+                top: offset.top + 10,  
+                width: 0, 
+                height: 0  
+            },  
+            onEnd: function () {  
+                $('.img_box').css({  
+                    /*background: 'red' */ 
+                });  
+                setTimeout(function () {  
+                    $('.img_box').css({  
+                        /*background: 'blue'*/  
+                    });  
+                }, 200);  
+                this.destory();  
+            }  
+        });  
+    });  
+
+    $(document).on('click','.menu_list1_addshopcar',function(){
+        empty_txt.style.display="none";
+        notempty_txt.style.display="block";
+        shopcar_empty.style.display="none";
+        shopcar_notempty.style.display="block";
+
+
+        var thisID=$(this).parent(".menu_list1_content").attr("id");
+        var itemname  = $(this).parent(".menu_list1_content").children(".menu_list1_name").html();
+        var itemprice = $(this).parent(".menu_list1_content").children(".menu_list1_price").html();
+        if(include(Arrays,thisID))
         {
-            var size=Math.random()*6+26;
-            var color="rgba("+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()*255)+","+Math.round(Math.random()+0.85)+")";
-            var numtxt=Math.floor(Math.random()*10);
-            var rotate=Math.floor(Math.random()*-120)+80;
-            var num="<span class='txt' style='color:"+color+"; font-size: "+size+"px;transform:rotatez("+rotate+"deg);'>"+numtxt+"</span>";
-            obj.innerHTML+=num;
+            var price    = $('#each-'+thisID).children(".onelist_price").html();
+            var quantity = $('#each-'+thisID).children(".num").html();
+
+            quantity = parseInt(quantity)+parseInt(1);
+            
+            var total = parseFloat(itemprice)*parseFloat(quantity);
+            
+            
+            $('#each-'+thisID).children(".onelist_price").html(total);
+            $('#each-'+thisID).children(".num").html(quantity);
+            
+            var prev_charges = $('.total_price').html();
+            prev_charges = parseFloat(prev_charges)-parseFloat(price);
+            
+            prev_charges = parseFloat(prev_charges)+parseFloat(total);
+            $('.total_price').html(prev_charges);
+            
         }
+        else
+        {
+            Arrays.push(thisID);
+            
+            var prev_charges = $('.total_price').html();
+            prev_charges = parseFloat(prev_charges)+parseFloat(itemprice);
+            
+            $('.total_price').html(prev_charges);
+            
+            $('.shopcar_notempty').append('<div class="shopcar_onelist" id="each-'+thisID+'" name="'+thisID+'"><span class="onelist_name">'+itemname+'</span><button class="minus">-</button><span class="num">1</span><button class="plus">+</button><span style="font-size: 14px;color: #F63440;line-height: 3.5rem;vertical-align: top;margin-left: 1rem;">￥</span><span class="onelist_price">'+itemprice+'</span></div>');           
+        }
+    });
+
+    $(document).on('click','.plus',function(){
+        var thisID=$(this).parent(".shopcar_onelist").attr("id");
+        var txt=$('#'+thisID).children(".num").html();
+        txt=parseInt(txt)+parseInt(1);
+        $('#'+thisID).children(".num").html(txt);
+
+        var list=$("."+thisID).children(".menu_list1_price").html();
+        var price=$('#'+thisID).children(".onelist_price").html();
+        price=parseFloat(price)+parseFloat(list);
+        $('#'+thisID).children(".onelist_price").html(price);
+
+        var prev_charges = $('.total_price').html();
+        prev_charges = parseFloat(prev_charges)+parseFloat(list);
+        $('.total_price').html(prev_charges);
+    });
+
+    $(document).on('click','.minus',function(){
+        var thisID=$(this).parent(".shopcar_onelist").attr("id");
+        var id=$("."+thisID).attr("id");
+        var index=$.inArray( id, Arrays );
+        var txt=$('#'+thisID).children(".num").html();
+        var list=$("."+thisID).children(".menu_list1_price").html();
+        var price=$('#'+thisID).children(".onelist_price").html();  
+        if(txt!=1){
+            txt=parseInt(txt)-parseInt(1);
+        }
+        else if(txt==1){
+            $(this).parent(".shopcar_onelist").remove();
+            Arrays.splice(index,1);
+            txt=0;
+        }
+        $('#'+thisID).children(".num").html(txt);
+
+        var total = parseFloat(txt)*parseFloat(list);
+        $('#'+thisID).children(".onelist_price").html(total);
+        var prev_charges = $('.total_price').html();
+        prev_charges = parseFloat(prev_charges)-parseFloat(price);
+            
+        prev_charges = parseFloat(prev_charges)+parseFloat(total);
+        $('.total_price').html(prev_charges);
+
+    });
+
+}
+
+
+    function include(arr, obj) {
+        for(var i=0; i<arr.length; i++) {
+            if (arr[i] == obj) return true;
+        }
+    }
+    function sucess_function(ret){
+        ret=JSON.parse(ret);
+        $(".menu_list1_content").css('display','none');
+        for(var i=0;i<getJsonLength(ret);i++){
+            $("#"+ret[i].id).css('display','inline-block');
+            
+        }
+        
+    }
+    function confirm(){
+        var alert=document.getElementsByClassName("alert")[0];
+        alert.style.display="block";
+        var alert_close = document.getElementById("close");
+        alert_close.onclick = function () {
+            alert.style.display = "none";
+        }
+    }
+    function cancel(){
+        var alert=document.getElementsByClassName("alert")[0];
+        alert.style.display="none";
+    }
+    function makeorder(){ 
+        var shopcar_onelist=document.getElementsByClassName("shopcar_onelist");
+        window.location="../add_mess.php?length="+shopcar_onelist.length;
+        var id=[];
+        for (var i = 0; i < shopcar_onelist.length; i++) {
+            id[i]=shopcar_onelist[i].getAttribute('name');
+        }
+        var onelist_name=document.getElementsByClassName("onelist_name");
+        var num=document.getElementsByClassName("num");
+        var onelist_price=document.getElementsByClassName("onelist_price");
+        var total_price=document.getElementsByClassName("total_price")[0];
+        for(var i=0;i<shopcar_onelist.length;i++){
+            var order={"pro_id":id[i],"pro_name":onelist_name[i].innerHTML,"quantity":num[i].innerHTML,"price":onelist_price[i].innerHTML,"amount":total_price.innerHTML};
+            setCookie("pro_id["+i+"]",id[i], 0);
+            setCookie("pro_name["+i+"]",onelist_name[i].innerHTML, 0);
+            setCookie("quantity["+i+"]",num[i].innerHTML, 0);
+            setCookie("price["+i+"]",onelist_price[i].innerHTML, 0);
+            setCookie("amount["+i+"]",total_price.innerHTML, 0);
+        }/*
+        var length=shopcar_onelist.length;
+        list={len:length};
+        post_ajax("order.php",list,false);*/
+    }
+
+    function search_product(elem){
+        search_word = $(elem).parent().find(".sinput").val()
+        data={"search_word":search_word};
+        post_ajax("../search_products.php", data, sucess_function);
+    }
+
+    function show_product_details(elem){
+        pro_id=$(elem).parent().attr("id")
+        alert(pro_id)
+        data={"pro_id":pro_id};
+        post_ajax("../show_product_details.php", data, sucess_function);
     }
 </script>
 </body>
