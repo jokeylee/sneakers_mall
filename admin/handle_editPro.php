@@ -7,9 +7,15 @@
     mysqli_query($conn,"set names utf8");
     $id=$_GET['id'];
 
+    $result=mysqli_query($conn,"select * from class_list order by class_weight desc");
+    $class_rows = [];
+    while($class_row = mysqli_fetch_assoc($result)){
+    $class_rows[] = $class_row;
+}
+
     $file = $_FILES['myFile'];
     $pro_image =  '../upload/pro_image/'.$file['name'];
-
+    print_r($_POST);
     if (move_uploaded_file($file['tmp_name'], $pro_image)) {
     
         /*$imagesize = getimagesize($pro_image);
@@ -27,10 +33,33 @@
         $image = imagecopyresized($dstimage, $srcimage, 0, 0, 0, 0, $newwidth, $newheight,  $srcwdith, $srcheight);
     
         imagejpeg($dstimage, $avatar_thumb);*/
-        $sql="UPDATE product set name='".$_POST['name']."',price='".$_POST['price']."',description='".$_POST['description']."',icon='".$pro_image."',class_id='".$_POST['class_id']."' where id='".$id."'";
+        $sql="UPDATE product set name='".$_POST['name']."',price='".$_POST['price']."',description='".$_POST['description']."',icon='".$pro_image."' where id='".$id."'";
         mysqli_query($conn,$sql);
         if(mysqli_errno($conn)!==0){
             die(mysqli_error($conn));
+        }
+        foreach($class_rows as $key=>$class_row){
+        $result = mysql_query("SELECT * FROM product_tag WHERE where product_id='".$id."' and class_name='".$class_row['class_name']."'");
+        if(mysqli_errno($conn)!==0){
+            die(mysqli_error($conn));
+        }
+        echo $result;
+        if( mysqli_num_rows($result) > 0) {
+            echo "hhhh";
+            mysqli_query($conn,"update product_tag set tag_name='".$_POST[$class_row['class_name']]."' where product_id='".$id."' and class_name='".$class_row['class_name']."'");
+            if(mysqli_errno($conn)!==0){
+            die(mysqli_error($conn));
+            }
+        }
+        else
+        {
+            echo "hhhhhhhhjjh";
+        mysqli_query($conn, "INSERT INTO product_tag(product_id, class_name, tag_name) values('".$id."','".$class_row['class_name']."','".$_POST[$class_row['class_name']]."')");
+            if(mysqli_errno($conn)!==0){
+            die(mysqli_error($conn));
+            }
+        }
+
         }
         echo '修改商品信息成功！';
     }

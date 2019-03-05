@@ -15,6 +15,11 @@
 
     $lists=mysqli_query($conn,"select * from product where id='".$id."'");
     $search=mysqli_fetch_assoc($lists);
+    $result=mysqli_query($conn,"select * from class_list order by class_weight desc");
+    $class_rows = [];
+    while($row = mysqli_fetch_assoc($result)){
+    $class_rows[] = $row;
+}
 ?>
 <!doctype html>
 <html>
@@ -38,18 +43,25 @@
 		<td align="right"><span class="td-txt">商品名称</span></td>
 		<td><input type="text" name="name"  value="<?php echo $search['name'];?>"/></td>
 	</tr>
+    <?php foreach($class_rows as $key=>$obj_row):
+
+    $result=mysqli_query($conn,"select * from category where class_name = '".$obj_row['class_name']."'");
+    $tag_rows = [];
+    while($row = mysqli_fetch_assoc($result)){
+    $tag_rows[] = $row;}?>
 	<tr>
-		<td align="right"><span class="td-txt">商品分类</span></td>
+		<td align="right"><span class="td-txt"><?php echo $obj_row["class_name"];?>分类</span></td>
 		<td>
-		<select name="class_id">
-			<?php foreach($rows as $key=>$row):
-            $pro_tag=mysqli_query($conn,"select * from product_tag where product_id='".$search['id']."'");
+		<select name="<?php echo $obj_row["class_name"];?>">
+		<?php foreach($tag_rows as $key=>$row):
+            $pro_tag=mysqli_query($conn,"select tag_name from product_tag where product_id='".$search['id']."' and class_name='".$obj_row['id']."'");
             $obj=mysqli_fetch_assoc($pro_tag);?>
-            <option value="<?php echo $row['class_name'];?>" <?php echo $row['class_name']==$obj['class_name']?"selected='selected'":null;?>><?php echo $row['class_name'];?></option>
+            <option value="<?php echo $row['tag_name'];?>" <?php echo $row['tag_name']==$obj['tag_name']?"selected='selected'":null;?>><?php echo $row['tag_name'];?></option>
             <?php endforeach;?>
 		</select>
 		</td>
 	</tr> 
+    <?php endforeach;?>
 	<tr>
 		<td align="right"><span class="td-txt">商品价格</span></td>
 		<td><input type="text" name="price"  value="<?php echo $search['price'];?>"/></td>

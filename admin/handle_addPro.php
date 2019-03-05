@@ -14,7 +14,7 @@
 
     $file = $_FILES['myFile'];
     $pro_image =  '../upload/pro_image/'.$file['name'];
-    print_r($_POST);
+    // print_r($_POST);
     if (move_uploaded_file($file['tmp_name'], $pro_image)) {
     
         /*$imagesize = getimagesize($pro_image);
