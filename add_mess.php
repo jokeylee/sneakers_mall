@@ -1,5 +1,8 @@
 <?php 
     session_start();
+    if (empty($_SESSION['user'])){
+        die("请先登录后再购买！");
+    }
     $user=$_SESSION['user'];
     header('Content-Type:text/html; charset=UTF-8');
     $conn = mysqli_connect('localhost', 'root' ,'' , 'makeorder');

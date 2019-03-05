@@ -407,7 +407,7 @@ window.onload=function(){
         var alert=document.getElementsByClassName("alert")[0];
         alert.style.display="none";
     }
-    function makeorder(){ 
+    function makeorder(){
         var shopcar_onelist=document.getElementsByClassName("shopcar_onelist");
         window.location="../add_mess.php?length="+shopcar_onelist.length;
         var id=[];
@@ -439,7 +439,7 @@ window.onload=function(){
 
     function show_product_details(elem){
         pro_id=$(elem).parent().attr("id")
-        alert(pro_id)
+        alert("商品详情正在加速开发中！")
         data={"pro_id":pro_id};
         post_ajax("../show_product_details.php", data, sucess_function);
     }
