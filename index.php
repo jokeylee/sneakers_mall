@@ -154,7 +154,6 @@
                     <div class="menu_list1_addshopcar"></div>
                 </div>
                 <?php  endforeach;?>
-                
             </div>
         </div>
     </div>
@@ -441,7 +440,28 @@ window.onload=function(){
         pro_id=$(elem).parent().attr("id")
         alert("商品详情正在加速开发中！")
         data={"pro_id":pro_id};
-        post_ajax("../show_product_details.php", data, sucess_function);
+        post_ajax("./show_product_details.php", data, show_detail_sucess_function);
+    }
+    function show_detail_sucess_function(ret){
+        ret=JSON.parse(ret);
+        product = ret[0]
+        console.log(product);
+        html = '';
+        html += '<div class="product_details"  style="margin:50px;">';
+        html += '<h2>'+product["description"]+'</h2>'
+        html += '<div class="product_image" style="float:left;border:1px solid red" ><img src="'+product["icon"]+'"/></div>';
+        html += '<div class="right_content" style="font-size:1.5em;">';
+        html += '<p class="product_name">'+product["name"]+'</p>';
+        // html += '<p class="product_name">'+product["price"]+'</p>'; line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;
+        product_tag=ret[1]
+        console.log(product_tag)
+        for(var obj in product_tag){
+            html += '<span class="product_class">'+product_tag[obj]["class_name"]+':</span>'
+            html += '<span class="product_tag">'+product_tag[obj]["tag_name"]+'</span><br>'
+        }
+        html += '<span style="font-size: 14px;color: #F63440;">￥</span><span class="">'+product["price"]+'</span>';
+        html += '<div class="menu_list1_addshopcar"></div></div></div>';
+        $(".menu_list1").append(html)
     }
 </script>
 </body>
