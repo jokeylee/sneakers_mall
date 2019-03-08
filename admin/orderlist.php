@@ -37,7 +37,6 @@
             <?php if($user):?>
             <span class="user">欢迎您，<?=$user['name']?></span>
             <a class="details" href="">我的资料</a>
-            <a class="logout" href="logout.php">退出登录</a>
             <?php else: ?>
             <span class="user">欢迎您，<a href="/login.php">请先登录！</a></span>
             <?php endif?>
