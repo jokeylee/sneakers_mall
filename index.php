@@ -437,6 +437,7 @@ window.onload=function(){
     }
 
     function show_product_details(elem){
+        return
         pro_id=$(elem).parent().attr("id")
         alert("商品详情正在加速开发中！")
         data={"pro_id":pro_id};

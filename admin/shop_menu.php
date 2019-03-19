@@ -438,6 +438,7 @@ window.onload=function(){
     }
 
     function show_product_details(elem){
+        return 
         pro_id=$(elem).parent().attr("id")
         alert(pro_id)
         data={"pro_id":pro_id};
