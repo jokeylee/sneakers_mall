@@ -437,11 +437,10 @@ window.onload=function(){
     }
 
     function show_product_details(elem){
-        return
         pro_id=$(elem).parent().attr("id")
-        alert("商品详情正在加速开发中！")
+        //alert("商品详情正在加速开发中！")
         data={"pro_id":pro_id};
-        post_ajax("./show_product_details.php", data, show_detail_sucess_function);
+        post_ajax("../show_product_details.php", data, show_detail_sucess_function);
     }
     function show_detail_sucess_function(ret){
         ret=JSON.parse(ret);
@@ -460,11 +459,16 @@ window.onload=function(){
             html += '<span class="product_class">'+product_tag[obj]["class_name"]+'：</span>'
             html += '<span class="product_tag">'+product_tag[obj]["tag_name"]+'</span><br>'
         }
-        html += '<div class="menu_list1_content" id='+product["id"]+' style="display:inline;margin-left:0px;background-color:#f2dede"><span style="font-size: 14px;color: #F63440;">￥</span><span class="menu_list1_price" style="position: static;margin-left:0px">'+product["price"]+'</span>';
+        html += '<div class="menu_list1_content" id='+product["id"]+' style="display:inline;margin-left:0px;background-color:#f2dede;border:none"><span style="color: #F63440;">￥</span><span class="menu_list1_price" style="position: static;margin-left:0px">'+product["price"]+'</span>';
         html += '<p class="menu_list1_name" style="display:none">'+product["name"]+'</p>'
-        html += '<div class="menu_list1_addshopcar" style="position: absolute;left: 80px;top: 145px;"></div></div></div></div>';
+        html += '<div class="menu_list1_addshopcar" style="position: absolute;left: 80px;top: 145px;"></div>';
+        html += '<button class="back" onclick="back()" style="margin-bottom: 2rem;">返回首页</button></div></div></div>'
+ 
         $(".menu_list1").append(html)
     }
+    function back(){
+            window.location="./index.php";
+        }
 </script>
 </body>
 </html>

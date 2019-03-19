@@ -465,3 +465,21 @@ input::-webkit-input-placeholder {
 .makeorder{
     margin-left: 6rem;
 }
+
+.back{
+    height: 2.5rem;
+    width: 7rem;
+    background-color: #F63440;
+    color: white;
+    text-align: center;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    border-radius: 4px;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    cursor:pointer;
+    position: absolute;
+    left: 25px;
+    top: 200px
+}

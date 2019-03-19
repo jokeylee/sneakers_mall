@@ -438,12 +438,39 @@ window.onload=function(){
     }
 
     function show_product_details(elem){
-        return 
         pro_id=$(elem).parent().attr("id")
-        alert(pro_id)
+        //alert("商品详情正在加速开发中！")
         data={"pro_id":pro_id};
-        post_ajax("../show_product_details.php", data, sucess_function);
+        alert(pro_id)
+        post_ajax("../show_product_details.php", data, show_detail_sucess_function);
     }
+    function show_detail_sucess_function(ret){
+        ret=JSON.parse(ret);
+        product = ret[0]
+        console.log(product);
+        html = '';
+        html += '<div class="product_details"  style="margin:30px;height:500px;padding: 30px;background: #f2dede;">';
+        html += '<h2 style="margin-bottom: 30px;">'+product["description"]+'</h2>'
+        html += '<div class="product_image" style="float:left;border:1px solid red" ><img src="'+product["icon"]+'"/></div>';
+        html += '<div class="right_content" style="font-size:1.5em;position: relative;left: 30px;top:10px;">';
+        html += '商品：<span class="product_name">'+product["name"]+'</span><br>';
+        // html += '<p class="product_name">'+product["price"]+'</p>'; line-height: 3.5rem;margin-left: 1rem;position: absolute;right: 5.5rem;bottom: -0.5rem;
+        product_tag=ret[1]
+        console.log(product_tag)
+        for(var obj in product_tag){
+            html += '<span class="product_class">'+product_tag[obj]["class_name"]+'：</span>'
+            html += '<span class="product_tag">'+product_tag[obj]["tag_name"]+'</span><br>'
+        }
+        html += '<div class="menu_list1_content" id='+product["id"]+' style="display:inline;margin-left:0px;background-color:#f2dede;border:none"><span style="color: #F63440;">￥</span><span class="menu_list1_price" style="position: static;margin-left:0px">'+product["price"]+'</span>';
+        html += '<p class="menu_list1_name" style="display:none">'+product["name"]+'</p>'
+        html += '<div class="menu_list1_addshopcar" style="position: absolute;left: 80px;top: 145px;"></div>';
+        html += '<button class="back" onclick="back()" style="margin-bottom: 2rem;">返回首页</button></div></div></div>'
+ 
+        $(".menu_list1").append(html)
+    }
+    function back(){
+            window.location="./shop_menu.php";
+        }
 </script>
 </body>
 </html>
